@@ -16,3 +16,8 @@ Os requisitos para este desafio são:
 - O resultado da request deverá ser exibido no command line com os dados do endereço, bem como qual API a enviou.
 - Limitar o tempo de resposta em 1 segundo. Caso contrário, o erro de timeout deve ser exibido.
 ```
+
+### Documentações das API's utilizadas:
+
+- ViaCEP: https://viacep.com.br
+- apiCEP: https://apicep.com/api-de-consulta/
