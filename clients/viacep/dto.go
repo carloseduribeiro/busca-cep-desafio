@@ -11,8 +11,5 @@ type AddressInformation struct {
 	GIA         string `json:"gia"`
 	DDD         string `json:"ddd"`
 	SIAFI       string `json:"siafi"`
-}
-
-type Error struct {
-	Error string `json:"erro"`
+	Error       *bool  `json:"erro,omitempty"`
 }
