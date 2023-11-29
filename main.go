@@ -11,11 +11,19 @@ import (
 	"time"
 )
 
-const cep string = "89036-370"
+const defaultTimeout = time.Second
 
 func main() {
-	ctx := context.TODO()
-	ctx, cancel := context.WithTimeout(ctx, time.Second)
+	hasArguments := len(os.Args) > 1
+	if hasArguments {
+		findCEP(context.TODO(), os.Args[1])
+		os.Exit(0)
+	}
+	log.Fatalf("You must input a cep. Example: './busca-cep 89036-000'")
+}
+
+func findCEP(ctx context.Context, cep string) {
+	ctx, cancel := context.WithTimeout(ctx, defaultTimeout)
 	defer cancel()
 	apicepResults := make(chan []byte)
 	viacepResults := make(chan []byte)

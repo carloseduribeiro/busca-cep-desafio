@@ -21,3 +21,12 @@ Os requisitos para este desafio são:
 
 - ViaCEP: https://viacep.com.br
 - apiCEP: https://apicep.com/api-de-consulta/
+
+## Exemplo de execução
+
+```shell
+# faz o build do projeto e cria o binário executável 'busca-cep':
+$ make build
+# executa a pesquisa do cep:
+$ ./busca-cep 89036-000
+```
