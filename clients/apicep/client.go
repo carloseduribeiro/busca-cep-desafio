@@ -11,7 +11,7 @@ import (
 
 const url = "https://cdn.apicep.com/file/apicep/%s.json"
 
-func FindCEP(ctx context.Context, cep string) (*AddressInformation, error) {
+func FindCEP(ctx context.Context, cep string) ([]byte, error) {
 	r, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf(url, cep), http.NoBody)
 	if err != nil {
 		return nil, err
@@ -20,12 +20,7 @@ func FindCEP(ctx context.Context, cep string) (*AddressInformation, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			panic(err)
-		}
-	}(response.Body)
+	defer response.Body.Close()
 	decoder := json.NewDecoder(response.Body)
 	if response.StatusCode != http.StatusOK {
 		errorResponse := new(Error)
@@ -34,9 +29,5 @@ func FindCEP(ctx context.Context, cep string) (*AddressInformation, error) {
 		}
 		return nil, errors.New(errorResponse.Message)
 	}
-	result := new(AddressInformation)
-	if err = decoder.Decode(result); err != nil {
-		return nil, err
-	}
-	return result, nil
+	return io.ReadAll(response.Body)
 }

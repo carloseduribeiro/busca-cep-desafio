@@ -5,14 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"regexp"
 )
 
 const url = "https://viacep.com.br/ws/%s/json/"
 
-func FindCEP(ctx context.Context, cep string) (*AddressInformation, error) {
+func FindCEP(ctx context.Context, cep string) ([]byte, error) {
 	if !isValidCEP(cep) {
 		return nil, errors.New("invalid cep")
 	}
@@ -24,12 +23,7 @@ func FindCEP(ctx context.Context, cep string) (*AddressInformation, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer func(body io.ReadCloser) {
-		err := body.Close()
-		if err != nil {
-			panic(err)
-		}
-	}(response.Body)
+	defer response.Body.Close()
 	if response.StatusCode == http.StatusBadRequest {
 		return nil, errors.New("invalid cep")
 	}
@@ -40,7 +34,7 @@ func FindCEP(ctx context.Context, cep string) (*AddressInformation, error) {
 	if result.Error != nil && *result.Error {
 		return nil, errors.New("non-existent cep")
 	}
-	return result, err
+	return json.Marshal(result)
 }
 
 func isValidCEP(cep string) bool {
